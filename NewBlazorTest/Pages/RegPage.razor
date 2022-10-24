@@ -1,0 +1,49 @@
+﻿@page "/regPage"
+
+<PageTitle>Registration</PageTitle>
+
+@using NewBlazorTest.Data
+@using NewBlazorTest.Services
+@using Microsoft.AspNetCore.Components.Web
+@inject IJSRuntime JS
+
+<h1>Registration form</h1>
+<EditForm Model="@user">
+    <p>Login:</p> <InputText @bind-Value="@user.Login" @onchange="@((ChangeEventArgs e) => user.Login = e.Value.ToString())"></InputText>
+    <p>Password:</p> <InputText @bind-Value="@user.Password" @onchange="@((ChangeEventArgs e) => user.Password = e.Value.ToString())"></InputText>
+    <p>Repeat password:</p> <InputText @bind-Value="@checkPassword"></InputText>
+    <p>Email:</p> <InputText @bind-Value="@user.Email" @onchange="@((ChangeEventArgs e) => user.Email = e.Value.ToString())"></InputText>
+    <p>First Name:</p> <InputText @bind-Value="@user.FirstName" @onchange="@((ChangeEventArgs e) => user.FirstName = e.Value.ToString())"></InputText>
+    <p>Last Name:</p> <InputText @bind-Value="@user.LastName" @onchange="@((ChangeEventArgs e) => user.LastName = e.Value.ToString())"></InputText>
+    <br /><br />
+    <button type="submit" @onclick="() => AddToDb() ">Sign Up</button>
+</EditForm>
+
+@code {
+    string checkPassword = "";
+    User user = new User();
+
+    private async void AddToDb()
+    {
+            if (String.IsNullOrEmpty(user.Email) || String.IsNullOrEmpty(user.FirstName) || String.IsNullOrEmpty(user.LastName)
+        || String.IsNullOrEmpty(user.Login) || String.IsNullOrEmpty(user.Password) || checkPassword == "")
+        {
+            await JS.InvokeVoidAsync("alert", "Not all fields are written!");
+            return;
+        }
+
+        if(checkPassword != user.Password)
+        {
+            await JS.InvokeVoidAsync("alert", "Passwords are not the same!");
+            return;
+        }
+        if(MongoDBConnection.FindByLogin(user.Login) is not null)
+        {
+            await JS.InvokeVoidAsync("alert", "Such login already exists!");
+            return;
+        }
+
+        MongoDBConnection.AddToDataBase(user);
+        user = new User();
+    }
+}

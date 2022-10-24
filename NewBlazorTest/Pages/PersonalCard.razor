@@ -1,0 +1,29 @@
+﻿@page "/personalCardPage"
+
+<PageTitle>Personal page</PageTitle>
+
+@using NewBlazorTest.Data
+@using NewBlazorTest.Services
+@using Microsoft.AspNetCore.Components.Web
+@inject IJSRuntime JS
+
+<h1>Personal card</h1>
+
+@if(MongoDBConnection.currentUser is not null)
+{
+    <div class="card" style="width : 250px">
+        <div class="card-body">
+            <p>First name: @MongoDBConnection.currentUser.FirstName</p>
+            <p>Last name: @MongoDBConnection.currentUser.LastName</p>
+            <p>Email: @MongoDBConnection.currentUser.Email</p>
+        </div>
+        <button @onclick="() => LoginOut()">Login out</button>
+    </div>   
+}
+
+@code {
+    private void LoginOut()
+    {
+        MongoDBConnection.currentUser = null;
+    }
+}

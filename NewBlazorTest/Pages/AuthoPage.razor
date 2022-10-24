@@ -1,0 +1,52 @@
+﻿@page "/authoPage"
+
+<PageTitle>Authorization</PageTitle>
+
+@using NewBlazorTest.Data
+@using NewBlazorTest.Services
+@using Microsoft.AspNetCore.Components.Web
+@inject IJSRuntime JS
+
+<h1>Authorization form</h1>
+<EditForm Model="@user">
+    <p>Login:</p> <InputText @bind-Value="@user.Login" @onchange="@((ChangeEventArgs e) => user.Login = e.Value.ToString())"></InputText>
+    <p>Password:</p> <InputText @bind-Value="@user.Password" @onchange="@((ChangeEventArgs e) => user.Password = e.Value.ToString())"></InputText>
+    <br /><br />
+    <button type="submit" @onclick="() => TryToFindUser() ">Sign in</button>
+</EditForm>
+
+@code {
+    User user = new User();
+
+    private async void TryToFindUser()
+    {
+        User foundedUser;
+
+            if (String.IsNullOrEmpty(user.Login) || String.IsNullOrEmpty(user.Password))
+        {
+            await JS.InvokeVoidAsync("alert", "Not all fields are written!");
+            return;
+        }
+
+        foundedUser = MongoDBConnection.FindByLogin(user.Login);
+
+        if(foundedUser is null)
+        {
+            await JS.InvokeVoidAsync("alert", "No such user in DB!");
+            return;
+        }
+        else
+        {
+            if(foundedUser.Password == user.Password)
+            {
+                MongoDBConnection.currentUser = MongoDBConnection.FindByLogin(user.Login);
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Incorrect password!");
+            }
+        }
+
+        user = new User();
+    }
+}
