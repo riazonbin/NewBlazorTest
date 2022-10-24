@@ -1,5 +1,9 @@
-﻿
-@page "/"
+﻿@page "/"
+
+@using NewBlazorTest.Services
+@using NewBlazorTest.Data
+@inject ILocalStorageService storageService;
+@inject MongoDBConnection mongoConnection
 
 <PageTitle>Index</PageTitle>
 
@@ -8,3 +12,15 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        User potentialUser = await storageService.GetAsync<User>("Authorization");
+        if(potentialUser is not null)
+        {
+            mongoConnection.currentUser = potentialUser;
+        }
+    }
+}

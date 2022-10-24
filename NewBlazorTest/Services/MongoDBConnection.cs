@@ -9,11 +9,11 @@ using NewBlazorTest.Data;
 
 namespace NewBlazorTest.Services
 {
-    public static class MongoDBConnection
+    public class MongoDBConnection
     {
-        public static User? currentUser;
+        public User? currentUser;
 
-        public static void AddToDataBase(User user)
+        public void AddToDataBase(User user)
         {
             var client = new MongoClient("mongodb://localhost");
             var database = client.GetDatabase("NewBlazorTestZaripov");
@@ -21,7 +21,7 @@ namespace NewBlazorTest.Services
             collection.InsertOne(user);
         }
 
-        public static User FindByLogin(string login)
+        public User FindByLogin(string login)
         {
             var client = new MongoClient("mongodb://localhost");
             var filter = Builders<User>.Filter.Eq("Login", login);
@@ -31,7 +31,7 @@ namespace NewBlazorTest.Services
         }
 
 
-        public static IMongoCollection<User> GetCollection()
+        public IMongoCollection<User> GetCollection()
         {
             var client = new MongoClient("mongodb://localhost");
             var database = client.GetDatabase("NewBlazorTestZaripov");

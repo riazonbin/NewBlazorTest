@@ -6,6 +6,7 @@
 @using NewBlazorTest.Services
 @using Microsoft.AspNetCore.Components.Web
 @inject IJSRuntime JS
+@inject MongoDBConnection mongoConnection
 
 <h1>Registration form</h1>
 <EditForm Model="@user">
@@ -37,13 +38,13 @@
             await JS.InvokeVoidAsync("alert", "Passwords are not the same!");
             return;
         }
-        if(MongoDBConnection.FindByLogin(user.Login) is not null)
+        if (mongoConnection.FindByLogin(user.Login) is not null)
         {
             await JS.InvokeVoidAsync("alert", "Such login already exists!");
             return;
         }
 
-        MongoDBConnection.AddToDataBase(user);
-        user = new User();
+        mongoConnection.AddToDataBase(user);
+        StateHasChanged();
     }
 }

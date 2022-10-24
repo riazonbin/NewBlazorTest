@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
+builder.Services.AddSingleton<MongoDBConnection>();
 
 var app = builder.Build();
 

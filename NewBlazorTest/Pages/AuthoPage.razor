@@ -6,6 +6,8 @@
 @using NewBlazorTest.Services
 @using Microsoft.AspNetCore.Components.Web
 @inject IJSRuntime JS
+@inject ILocalStorageService storageService
+@inject MongoDBConnection mongoConnection
 
 <h1>Authorization form</h1>
 <EditForm Model="@user">
@@ -22,13 +24,13 @@
     {
         User foundedUser;
 
-            if (String.IsNullOrEmpty(user.Login) || String.IsNullOrEmpty(user.Password))
+        if (String.IsNullOrEmpty(user.Login) || String.IsNullOrEmpty(user.Password))
         {
             await JS.InvokeVoidAsync("alert", "Not all fields are written!");
             return;
         }
 
-        foundedUser = MongoDBConnection.FindByLogin(user.Login);
+        foundedUser = mongoConnection.FindByLogin(user.Login);
 
         if(foundedUser is null)
         {
@@ -39,14 +41,14 @@
         {
             if(foundedUser.Password == user.Password)
             {
-                MongoDBConnection.currentUser = MongoDBConnection.FindByLogin(user.Login);
+                mongoConnection.currentUser = mongoConnection.FindByLogin(user.Login);
+                await storageService.SetAsync<User>("Authorization", mongoConnection.currentUser);
             }
             else
             {
                 await JS.InvokeVoidAsync("alert", "Incorrect password!");
             }
         }
-
-        user = new User();
+        StateHasChanged();
     }
 }

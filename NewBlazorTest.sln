@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewBlazorTest", "\NAS36D451\user-domain$\stud\202010\Desktop\projects\NewBlazorTest\NewBlazorTest\NewBlazorTest.csproj", "{24D4B5C4-A5A0-4083-9A49-580E52A44919}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewBlazorTest", "NewBlazorTest\NewBlazorTest.csproj", "{AF75B105-B337-4545-A772-53E2876DECEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{24D4B5C4-A5A0-4083-9A49-580E52A44919}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{24D4B5C4-A5A0-4083-9A49-580E52A44919}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{24D4B5C4-A5A0-4083-9A49-580E52A44919}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{24D4B5C4-A5A0-4083-9A49-580E52A44919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF75B105-B337-4545-A772-53E2876DECEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF75B105-B337-4545-A772-53E2876DECEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF75B105-B337-4545-A772-53E2876DECEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF75B105-B337-4545-A772-53E2876DECEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
