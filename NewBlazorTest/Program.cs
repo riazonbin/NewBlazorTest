@@ -10,6 +10,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
 builder.Services.AddSingleton<MongoDBConnection>();
+builder.Services.AddSingleton<FileSystemService>();
 
 var app = builder.Build();
 

@@ -1,0 +1,28 @@
+﻿@page "/photoPage"
+@using MongoDB.Bson.Serialization
+@using MongoDB.Driver.GridFS
+@using static System.Net.Mime.MediaTypeNames
+@inject FileSystemService fileSysServ
+
+<h3>PhotoPage</h3>
+
+<button type="button" @onclick="fileSysServ.UploadImageToDb">Upload photo</button>
+
+<table>
+        <thead>
+            <tr>
+                <th>File name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var el in fileSysServ.FindFileAsync())
+            {
+            <tr>
+                <td><a href="">@el.Filename</a></td>
+            </tr>
+            }
+        </tbody>
+</table>
+
+@code {
+}
