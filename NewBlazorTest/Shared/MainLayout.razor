@@ -1,6 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @using NewBlazorTest.Services
 @inject MongoDBConnection mongoConnection
+@inject ILocalStorageService storageService
+@using NewBlazorTest.Data
 
 <PageTitle>NewBlazorTest</PageTitle>
 
@@ -19,3 +21,16 @@
         </article>
     </main>
 </div>
+
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        User potentialUser = await storageService.GetAsync<User>("Authorization");
+        if(potentialUser is not null)
+        {
+            mongoConnection.currentUser = potentialUser;
+        }
+    }
+}
+}

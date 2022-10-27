@@ -8,19 +8,20 @@
 @inject IJSRuntime JS
 @inject ILocalStorageService storageService
 @inject MongoDBConnection mongoConnection
+@inject NavigationManager nManager
 
 <h1>Authorization form</h1>
-<EditForm Model="@user">
+<EditForm Model="@user" OnValidSubmit="TryToFindUser">
     <p>Login:</p> <InputText @bind-Value="@user.Login" @onchange="@((ChangeEventArgs e) => user.Login = e.Value.ToString())"></InputText>
     <p>Password:</p> <InputText @bind-Value="@user.Password" @onchange="@((ChangeEventArgs e) => user.Password = e.Value.ToString())"></InputText>
     <br /><br />
-    <button type="submit" @onclick="() => TryToFindUser() ">Sign in</button>
+    <button type="submit">Sign in</button>
 </EditForm>
 
 @code {
     User user = new User();
 
-    private async void TryToFindUser()
+    private async Task TryToFindUser()
     {
         User foundedUser;
 
@@ -42,6 +43,7 @@
             if(foundedUser.Password == user.Password)
             {
                 mongoConnection.currentUser = mongoConnection.FindByLogin(user.Login);
+                nManager.NavigateTo("/personalCardPage");
                 await storageService.SetAsync<User>("Authorization", mongoConnection.currentUser);
             }
             else
@@ -49,6 +51,7 @@
                 await JS.InvokeVoidAsync("alert", "Incorrect password!");
             }
         }
+
         StateHasChanged();
     }
 }

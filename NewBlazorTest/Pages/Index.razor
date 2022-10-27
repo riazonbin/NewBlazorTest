@@ -15,12 +15,4 @@ Welcome to your new app.
 
 @code
 {
-    protected override async Task OnInitializedAsync()
-    {
-        User potentialUser = await storageService.GetAsync<User>("Authorization");
-        if(potentialUser is not null)
-        {
-            mongoConnection.currentUser = potentialUser;
-        }
-    }
 }

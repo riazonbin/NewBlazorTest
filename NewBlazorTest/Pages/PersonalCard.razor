@@ -8,6 +8,7 @@
 @inject IJSRuntime JS
 @inject ILocalStorageService storageService
 @inject MongoDBConnection mongoConnection
+@inject NavigationManager nManager
 
 <h1>Personal card</h1>
 
@@ -28,5 +29,6 @@
     {
         mongoConnection.currentUser = null;
         storageService.RemoveAsync("Authorization");
+        nManager.NavigateTo("/");
     }
 }
