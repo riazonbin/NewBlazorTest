@@ -26,11 +26,10 @@
             }
         </tbody>
 </table>
-<img src="/images/@image"/ width="300" height="300" alt="Currently no selected image">
+<img src="/images/@selectedImage" width="300" height="300" alt="Currently no selected image">
 
 @code {
-    string URL;
-    string image;
+    string selectedImage;
     List<string> images;
 
     protected override void OnInitialized()
@@ -40,11 +39,6 @@
     }
     void ShowImage(string image)
     {
-        this.image = image;
-    }
-
-    void GetImageName(string image)
-    {
-        var newImage = image.Split('\\');
+        this.selectedImage = image;
     }
 }
