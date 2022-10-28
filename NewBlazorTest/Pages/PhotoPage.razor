@@ -1,7 +1,9 @@
 ﻿@page "/photoPage"
+@using MongoDB.Bson
 @using MongoDB.Bson.Serialization
 @using MongoDB.Driver.GridFS
-@using static System.Net.Mime.MediaTypeNames
+@using System.Drawing
+
 @inject FileSystemService fileSysServ
 
 <h3>PhotoPage</h3>
@@ -15,14 +17,34 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(var el in fileSysServ.FindFileAsync())
+            @foreach(var image in images)
             {
             <tr>
-                <td><a href="">@el.Filename</a></td>
+                <td><a href="/images/@image" download="@image">@image</a></td>
+                <td><button type="button" @onclick="() => ShowImage(image)" >Show</button></td>
             </tr>
             }
         </tbody>
 </table>
+<img src="/images/@image"/ width="300" height="300" alt="Currently no selected image">
 
 @code {
+    string URL;
+    string image;
+    List<string> images;
+
+    protected override void OnInitialized()
+    {
+        fileSysServ.GetImagesToProjectFolder();
+        images = fileSysServ.FindFiles();
+    }
+    void ShowImage(string image)
+    {
+        this.image = image;
+    }
+
+    void GetImageName(string image)
+    {
+        var newImage = image.Split('\\');
+    }
 }
