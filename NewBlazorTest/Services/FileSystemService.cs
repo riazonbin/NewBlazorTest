@@ -10,6 +10,11 @@ namespace NewBlazorTest.Services
 {
     public class FileSystemService
     {
+        private readonly ILogger<FileSystemService> _logger;
+        public FileSystemService(ILogger<FileSystemService> logger)
+        {
+            _logger = logger;
+        }
         public void UploadImageToDb()
         {
             var client = new MongoClient("mongodb://localhost");
@@ -46,7 +51,7 @@ namespace NewBlazorTest.Services
 
         public void GetImagesToProjectFolder()
         {
-            AddImagesToDb();
+            //AddImagesToDb();
 
             var client = new MongoClient("mongodb://localhost");
             var database = client.GetDatabase("ZaripovImages");
@@ -54,10 +59,18 @@ namespace NewBlazorTest.Services
             var images = gridFS.Find(new BsonDocument()).ToList();
             foreach (var image in images)
             {
-                using (FileStream fs = new FileStream($"{Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/wwwroot/images/")}{image.Filename}", FileMode.OpenOrCreate))
+                try
                 {
-                    gridFS.DownloadToStreamByName(image.Filename, fs);
+                    using (FileStream fs = new FileStream($"{Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/wwwroot/images/")}{image.Filename}", FileMode.CreateNew))
+                    {
+                        gridFS.DownloadToStreamByName(image.Filename, fs);
+                    }
                 }
+                catch (Exception)
+                {
+                    _logger.LogError("Image already exists");
+                }
+                
             }
         }
 
