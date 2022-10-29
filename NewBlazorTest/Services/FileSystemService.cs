@@ -11,59 +11,48 @@ namespace NewBlazorTest.Services
     public class FileSystemService
     {
         private readonly ILogger<FileSystemService> _logger;
+        private readonly GridFSBucket _gridFS;
         public FileSystemService(ILogger<FileSystemService> logger)
         {
             _logger = logger;
+            var client = new MongoClient("mongodb://localhost");
+            var database = client.GetDatabase("ZaripovImages");
+            _gridFS = new GridFSBucket(database);
         }
         public void UploadImageToDb()
         {
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("ZaripovImages");
-            var gridFS = new GridFSBucket(database);
-
             using (FileStream fs = new FileStream(@"D:\\OneDrive\\Рабочий стол\\photosToUpload\\ball.jpg", FileMode.Open))
             {
-                gridFS.UploadFromStream("ball.jpg", fs);
+                _gridFS.UploadFromStream("ball.jpg", fs);
             }
         }
         public void UploadImageToDb(string fileName, string path)
         {
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("ZaripovImages");
-            var gridFS = new GridFSBucket(database);
-
             using (FileStream fs = new FileStream(path, FileMode.Open))
             {
-                gridFS.UploadFromStream(fileName, fs);
+                _gridFS.UploadFromStream(fileName, fs);
             }
         }
 
         public void DownloadFileToProject(GridFSFileInfo file)
         {
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("ZaripovImages");
-            var gridFS = new GridFSBucket(database);
             using (FileStream fs = new FileStream($"{Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/wwwroot/images/")}{file.Filename}", FileMode.CreateNew))
             {
-                gridFS.DownloadToStreamByName(file.Filename, fs);
+                _gridFS.DownloadToStreamByName(file.Filename, fs);
             }
         }
 
         public void GetImagesToProjectFolder()
         {
             //AddImagesToDb();
-
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("ZaripovImages");
-            var gridFS = new GridFSBucket(database);
-            var images = gridFS.Find(new BsonDocument()).ToList();
+            var images = _gridFS.Find(new BsonDocument()).ToList();
             foreach (var image in images)
             {
                 try
                 {
                     using (FileStream fs = new FileStream($"{Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/wwwroot/images/")}{image.Filename}", FileMode.CreateNew))
                     {
-                        gridFS.DownloadToStreamByName(image.Filename, fs);
+                        _gridFS.DownloadToStreamByName(image.Filename, fs);
                     }
                 }
                 catch (Exception)
@@ -76,10 +65,7 @@ namespace NewBlazorTest.Services
 
         public List<string> FindFiles()
         {
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("ZaripovImages");
-            var gridFS = new GridFSBucket(database);
-            var fileInfos = gridFS.Find(new BsonDocument()).ToList();
+            var fileInfos = _gridFS.Find(new BsonDocument()).ToList();
             var imageInfos = new List<string>();
             foreach(var file in fileInfos)
             {
@@ -90,18 +76,11 @@ namespace NewBlazorTest.Services
 
         public bool FileExists(string filename)
         {
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("ZaripovImages");
-            var gridFS = new GridFSBucket(database);
-
-            return gridFS.Find(FilterDefinition<GridFSFileInfo>.Empty).ToEnumerable().Any(x => x.Filename == filename);
+            return _gridFS.Find(FilterDefinition<GridFSFileInfo>.Empty).ToEnumerable().Any(x => x.Filename == filename);
         }
 
         private void AddImagesToDb()
         {
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("ZaripovImages");
-            var gridFS = new GridFSBucket(database);
             foreach (var file in Directory.GetFiles("wwwroot/images"))
             {
                 if (!FileExists(Path.GetFileName(file)))
