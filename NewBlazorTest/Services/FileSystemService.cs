@@ -21,6 +21,7 @@ namespace NewBlazorTest.Services
             _gridFS = new GridFSBucket(database);
         }
 
+        #region Upload
         public async Task UploadImageToDb(Stream stream, string fileName)
         {
             await _gridFS.UploadFromStreamAsync(fileName, stream);
@@ -33,7 +34,9 @@ namespace NewBlazorTest.Services
                 _gridFS.UploadFromStream(fileName, fs);
             }
         }
+        #endregion
 
+        #region Download
         public void DownloadFileToProject(GridFSFileInfo file)
         {
             using (FileStream fs = new FileStream($"{Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/wwwroot/images/")}{file.Filename}", FileMode.CreateNew))
@@ -41,6 +44,22 @@ namespace NewBlazorTest.Services
                 _gridFS.DownloadToStreamByName(file.Filename, fs);
             }
         }
+
+        public void DownloadFileToProject(IBrowserFile file)
+        {
+            try
+            {
+                using (FileStream fs = new FileStream($"{Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/wwwroot/images/")}{file.Name}", FileMode.CreateNew))
+                {
+                    _gridFS.DownloadToStreamByName(file.Name, fs);
+                }
+            }
+            catch (Exception)
+            {
+                _logger.LogError("Image already exists");
+            }
+        }
+        #endregion
 
         public void GetImagesToProjectFolder()
         {

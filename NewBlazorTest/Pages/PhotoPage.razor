@@ -36,6 +36,7 @@
 
     protected override void OnInitialized()
     {
+        fileSysServ.GetImagesToProjectFolder();
         RenderAll();
     }
     void ShowImage(string image)
@@ -52,6 +53,7 @@
             _loadedFiles.Add(file);
             Stream stream = file.OpenReadStream(2000000);
             await fileSysServ.UploadImageToDb(stream, file.Name);
+            fileSysServ.DownloadFileToProject(file);
             stream.Dispose();
         }
         RenderAll();
@@ -59,7 +61,6 @@
 
     void RenderAll()
     {
-        fileSysServ.GetImagesToProjectFolder();
         images = fileSysServ.FindFiles();
     }
 }
