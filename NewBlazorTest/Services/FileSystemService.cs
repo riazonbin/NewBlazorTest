@@ -5,6 +5,7 @@ using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.IO;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace NewBlazorTest.Services
 {
@@ -19,13 +20,12 @@ namespace NewBlazorTest.Services
             var database = client.GetDatabase("ZaripovImages");
             _gridFS = new GridFSBucket(database);
         }
-        public void UploadImageToDb()
+
+        public async Task UploadImageToDb(Stream stream, string fileName)
         {
-            using (FileStream fs = new FileStream(@"D:\\OneDrive\\Рабочий стол\\photosToUpload\\ball.jpg", FileMode.Open))
-            {
-                _gridFS.UploadFromStream("ball.jpg", fs);
-            }
+            await _gridFS.UploadFromStreamAsync(fileName, stream);
         }
+
         public void UploadImageToDb(string fileName, string path)
         {
             using (FileStream fs = new FileStream(path, FileMode.Open))
