@@ -44,7 +44,6 @@ namespace NewBlazorTest.Services
 
         public void GetImagesToProjectFolder()
         {
-            //AddImagesToDb();
             var images = _gridFS.Find(new BsonDocument()).ToList();
             foreach (var image in images)
             {

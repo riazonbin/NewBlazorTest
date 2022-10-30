@@ -22,7 +22,7 @@
             {
             <tr>
                 <td><a href="/images/@image" download="@image">@image</a></td>
-                <td><button type="button" @onclick="() => selectedImage=image" >Show</button></td>
+                <td><button type="button" @onclick="() => ShowImage(image)" >Show</button></td>
             </tr>
             }
         </tbody>
@@ -36,8 +36,7 @@
 
     protected override void OnInitialized()
     {
-        fileSysServ.GetImagesToProjectFolder();
-        images = fileSysServ.FindFiles();
+        RenderAll();
     }
     void ShowImage(string image)
     {
@@ -55,7 +54,12 @@
             await fileSysServ.UploadImageToDb(stream, file.Name);
             stream.Dispose();
         }
+        RenderAll();
+    }
+
+    void RenderAll()
+    {
+        fileSysServ.GetImagesToProjectFolder();
         images = fileSysServ.FindFiles();
-        StateHasChanged();
     }
 }
